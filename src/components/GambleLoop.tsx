@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useSetAtom, useAtomValue } from "jotai";
 import { captionStateAtom, gambleCount } from "@/lib/jotaiState";
 import ResetCountButton from "@/components/ResetButton";
+import useVideoPath from "@/hooks/useVideoPath";
 
 export default function GambleLoop() {
+  const getVideoPath = useVideoPath();
   const [isReady, setIsReady] = useState({ loaded: false, playing: false });
   const [showOutcome, setIsOutcomeVisible] = useState(false);
   const [currentOutcome, setCurrentOutcome] = useState(1);
@@ -127,7 +129,7 @@ export default function GambleLoop() {
       {/* Base loop video */}
       <div className="relative">
         <video autoPlay loop muted className="pointer-events-none">
-          <source src="/videos/gamblecore_loop.mp4" type="video/mp4" />
+          <source src={getVideoPath('gamblecore_loop.mp4')} type="video/mp4" />
           Your browser is too old to gamble.
         </video>
 
@@ -140,7 +142,7 @@ export default function GambleLoop() {
             className="pointer-events-none"
             onLoadedData={() => console.log("> Pre-determined outcome already calculated.")}
           >
-            <source src={`/videos/gamblecore_outcome${currentOutcome}.mp4`} type="video/mp4" />
+            <source src={getVideoPath(`gamblecore_outcome${currentOutcome}.mp4`)} type="video/mp4" />
             Your browser is too old to gamble.
           </video>
         </div>
