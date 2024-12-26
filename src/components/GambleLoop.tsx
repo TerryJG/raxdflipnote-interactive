@@ -127,7 +127,7 @@ export default function GambleLoop() {
       {/* Base loop video */}
       <div className="relative">
         <video autoPlay loop muted className="pointer-events-none">
-          <source src="/src/assets/videos/gamblecore_loop.mp4" type="video/mp4" />
+          <source src="/videos/gamblecore_loop.mp4" type="video/mp4" />
           Your browser is too old to gamble.
         </video>
 
@@ -140,7 +140,7 @@ export default function GambleLoop() {
             className="pointer-events-none"
             onLoadedData={() => console.log("> Pre-determined outcome already calculated.")}
           >
-            <source src={`/src/assets/videos/gamblecore_outcome${currentOutcome}.mp4`} type="video/mp4" />
+            <source src={`/videos/gamblecore_outcome${currentOutcome}.mp4`} type="video/mp4" />
             Your browser is too old to gamble.
           </video>
         </div>
