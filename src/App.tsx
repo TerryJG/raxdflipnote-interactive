@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { hasStartedGambling, captionStateAtom } from "@/lib/jotaiState";
 import Caption from "@/components/Caption";
@@ -8,6 +8,19 @@ import GamblecoreIntro from "@/pages/Gamblecore_Intro";
 export default function App() {
   const [hasInitiatedGambling] = useAtom(hasStartedGambling);
   const [captionState] = useAtom(captionStateAtom);
+  const [showIntro, setShowIntro] = useState(false);
+
+  useEffect(() => {
+    if (hasInitiatedGambling) {
+      const timer = setTimeout(() => {
+        setShowIntro(true);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowIntro(false);
+    }
+  }, [hasInitiatedGambling]);
 
   useEffect(() => {
     console.log("LET'S GO GAMBLING!!!");
@@ -17,7 +30,7 @@ export default function App() {
 
   return (
     <main className="font-roboto flex h-[100dvh] w-[100dvw] flex-col justify-center gap-2 overflow-hidden md:h-screen md:w-screen">
-      {hasInitiatedGambling ? <GamblecoreIntro /> : <LandingPage />}
+      {hasInitiatedGambling && showIntro ? <GamblecoreIntro /> : <LandingPage />}
       {captionState && <Caption text={captionState.text} duration={captionState.duration} />}
     </main>
   );
