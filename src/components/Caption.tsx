@@ -29,7 +29,7 @@ const Caption = ({ text }: CaptionProps) => {
   // If animations are disabled, render without motion components
   if (!animate) {
     return (
-      <div className="fixed bottom-10 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-md bg-zinc-700/80 backdrop-blur-sm px-4 py-2 text-center text-xl text-white">
+      <div className="fixed bottom-10 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-md bg-zinc-700/80 backdrop-blur-sm px-4 py-2 text-center text-xl z-[999] text-white">
         <p>"{text}"</p>
       </div>
     );
@@ -43,7 +43,7 @@ const Caption = ({ text }: CaptionProps) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: transition }}
-        className="fixed bottom-10 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-md bg-zinc-700 px-4 py-2 text-center text-xl text-white"
+        className="fixed bottom-10 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-md z-[999] bg-zinc-700 px-4 py-2 text-center text-xl text-white"
       >
         <p>"{text}"</p>
       </motion.div>

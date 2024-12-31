@@ -13,7 +13,7 @@ export default function GamblecoreIntro_Default() {
     if (isVideoReady) {
       setCaptionState({
         text: "Let's go gambling!",
-        duration: 2,
+        duration: 1.75,
       });
     }
   }, [isVideoReady, setCaptionState]);

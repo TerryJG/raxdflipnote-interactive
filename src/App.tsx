@@ -14,7 +14,7 @@ export default function App() {
     if (hasInitiatedGambling) {
       const timer = setTimeout(() => {
         setShowIntro(true);
-      }, 1000);
+      }, 400);
 
       return () => clearTimeout(timer);
     } else {

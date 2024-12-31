@@ -41,14 +41,12 @@ export default function GambleLoop() {
     const video = outcomeVideoRef.current;
     if (!video) return;
 
-    video.load();
     if (!hasLogged.current) {
       console.log("> Gambling machine ready.");
       hasLogged.current = true;
     }
-    video.addEventListener("loadeddata", () => {
-      setIsReady((prev) => ({ ...prev, loaded: true }));
-    });
+    
+    setIsReady((prev) => ({ ...prev, loaded: true }));
   }, []);
 
   const playOutcome = async () => {
@@ -154,7 +152,7 @@ export default function GambleLoop() {
       <div className="mt-14 md:mb-10">
         <button
           ref={buttonRef}
-          className="animate-bounce rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-4 text-4xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 active:scale-[0.97] active:animate-none"
+          className="animate-bounce rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-4 text-4xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 focus:ring-purple-400 focus:ring-offset-2 active:scale-[0.97] active:animate-none"
           onClick={triggerGamble}
         >
           Gamble!

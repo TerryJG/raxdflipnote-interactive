@@ -10,8 +10,11 @@ export default function LandingPage({ channelLink = "https://www.youtube.com/@ra
 
   const handleEntryClick = () => {
     if (hasInitiatedGambling) return;
+
+    setTimeout(() => {
     console.log("%c Got another poor soul! Initiating gambling addiction...", "color: red;");
     setHasInitiatedGambling(true);
+    }, 400);
   };
   return (
     <>
@@ -22,11 +25,12 @@ export default function LandingPage({ channelLink = "https://www.youtube.com/@ra
         </a>
       </div>
 
-      <div className="flex items-center justify-center text-xl">
+      <div className="flex flex-col gap-5 items-center justify-center text-xl">
         <button className="rounded-md bg-blue-500 px-4 py-3 text-white transition-all duration-200 hover:drop-shadow-md active:scale-[0.97]" onClick={handleEntryClick}>
           <span className="md:hidden">Tap here to start gambling!</span>
           <span className="hidden md:block">Click here to start gambling!</span>
         </button>
+        <em className="opacity-50">(Surely there's a message to be found here somewhere, right?)</em>
       </div>
     </>
   );
