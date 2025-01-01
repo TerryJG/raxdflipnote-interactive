@@ -69,7 +69,7 @@ export const useCaption = (playerRef: React.RefObject<VideoRef>, vttPath: string
           }
         }
 
-        console.log("Parsed captions:", parsedCaptions);
+        // console.log("Parsed captions:", parsedCaptions); // Debugging
         setCaptions(parsedCaptions);
       } catch (error) {
         console.error("Caption loading error:", error);

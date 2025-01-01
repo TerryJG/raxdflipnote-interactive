@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAtom } from "jotai";
 import { hasFinishedIntro } from "@/lib/jotaiState";
 import { useVideoPath } from "@/hooks/useVideoPath";
@@ -7,6 +7,7 @@ import ReactPlayer from "react-player/file";
 
 export default function GamblecoreIntro() {
   const [hasWatchedIntro, setHasWatchedIntro] = useAtom(hasFinishedIntro);
+  const hasLoggedCutscene = useRef(false);
 
   const getVideoPath = useVideoPath();
   const getCaptionPath = useCaptionPath();
@@ -15,18 +16,14 @@ export default function GamblecoreIntro() {
   const [, setCurrentTime] = useState(0);
   const [, setIsVideoReady] = useState(false);
 
-
   const getIntroFiles = () => {
-    // grab the gamble count from local storage set by jotai.
-    // For some reason, grabbing it from the jotai state itself doesn't work.
     const storedCount = parseInt(localStorage.getItem("gambleCount") || "0"); 
-    let videoFile = "gamblecore_intro.mp4"; // default
-    let captionFile = "gamblecore_intro.vtt"; // default
+    let videoFile = "gamblecore_intro.mp4";
+    let captionFile = "gamblecore_intro.vtt";
 
     if (storedCount >= 700) {
       videoFile = "gamblecore_intro.mp4";
       captionFile = "gamblecore_intro.vtt";
-      window.open("https://www.youtube.com/watch?v=qrxQZ2NKkVo", "_blank");
 
     } else if (storedCount >= 600) {
       videoFile = "gamblecore_intro6.mp4";
@@ -52,10 +49,25 @@ export default function GamblecoreIntro() {
     return {
       videoPath: getVideoPath(videoFile),
       captionPath: getCaptionPath(captionFile),
+      storedCount,
     };
   };
 
-  const { videoPath, captionPath } = getIntroFiles();
+  const { videoPath, captionPath, storedCount } = getIntroFiles();
+
+  // Additional logic for conditional storedCount events.
+  // Also, this uses a ref to prevent re-renders.
+  useEffect(() => {
+    if (!hasLoggedCutscene.current && storedCount >= 200) {
+      console.log("> Playing unskippable gamblecore cutscene...");
+      
+      if (storedCount >= 700) {
+        console.log("> Opening latest gamblecore cutscene in a new tab...");
+        window.open("https://www.youtube.com/watch?v=qrxQZ2NKkVo", "_blank");
+      }
+      hasLoggedCutscene.current = true;
+    }
+  }, [storedCount]);
 
   useCaption(
     playerRef as React.RefObject<{

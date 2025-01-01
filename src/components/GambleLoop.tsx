@@ -136,7 +136,7 @@ export default function GambleLoop() {
             muted={false}
             playsinline
             onProgress={({ playedSeconds }) => {
-              console.log("Video progress:", playedSeconds);
+              // console.log("Video progress:", playedSeconds); // Debugging for video progress
             }}
           />
         </motion.div>
