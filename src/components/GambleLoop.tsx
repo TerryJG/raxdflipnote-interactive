@@ -5,6 +5,7 @@ import { useVideoPath } from "@/hooks/useVideoPath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
 import ReactPlayer from "react-player/file";
 import ResetCountButton from "@/components/ResetButton";
+import { motion } from "motion/react";
 
 export default function GambleLoop() {
   const [isReady, setIsReady] = useState({ loaded: false, playing: false });
@@ -117,7 +118,14 @@ export default function GambleLoop() {
         <ReactPlayer ref={baseVideoRef} url={getVideoPath("gamblecore_loop.mp4")} width="100%" height="auto" playing={true} loop={true} muted={true} playsinline />
 
         {/* Outcome video overlay */}
-        <div className={`absolute inset-0 ${showOutcome ? "opacity-100" : "opacity-0"}`}>
+        <motion.div 
+          className="absolute inset-0"
+          initial={{ opacity: 1 }}
+          animate={{ 
+            opacity: showOutcome ? 1 : 0,
+            transition: { duration: 0 }
+          }}
+        >
           <ReactPlayer
             ref={outcomeVideoRef}
             url={getVideoPath(`gamblecore_outcome${currentOutcome}.mp4`)}
@@ -128,11 +136,10 @@ export default function GambleLoop() {
             muted={false}
             playsinline
             onProgress={({ playedSeconds }) => {
-              // Optional: Log progress to debug video ending
               console.log("Video progress:", playedSeconds);
             }}
           />
-        </div>
+        </motion.div>
 
         {/* Clickable area overlay (for mobile) */}
         <div className="absolute inset-0 h-full w-full cursor-pointer" onClick={triggerGamble} onTouchStart={triggerGamble} />

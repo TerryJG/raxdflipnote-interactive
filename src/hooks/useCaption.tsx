@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSetAtom, useAtomValue } from "jotai";
-import { hasStartedGambling, captionStateAtom, currentVideoTimeAtom,  } from "@/lib/jotaiState";
+import { hasStartedGambling, captionStateAtom, currentVideoTimeAtom } from "@/lib/jotaiState";
+import { AnimatePresence, motion } from "motion/react";
 
 type CaptionProps = {
   text: string;
@@ -128,22 +129,33 @@ export const useCaption = (playerRef: React.RefObject<VideoRef>, vttPath: string
 
 export default function CaptionOverlay({ text }: { text?: string }): JSX.Element | null {
   const hasInitiatedGambling = useAtomValue(hasStartedGambling);
+  if (!hasInitiatedGambling) return null;
+
   // Debugging for current video time
   // const currentTime = useAtomValue(currentVideoTimeAtom);
 
 
-  if (!text || !hasInitiatedGambling) return null;
-
   return (
-    <div
-      className="fixed bottom-10 left-1/2 z-[999] flex -translate-x-1/2 items-center justify-center rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm cursor-default"
-    >
-      <div className={`flex flex-col items-center `}>
-        <p>"{text}"</p>
-
-        {/* Debugging for current video time */}
-        {/* <p className="text-sm text-gray-300">Time: {currentTime.toFixed(2)}s</p> */}
-      </div>
-    </div>
+    <AnimatePresence mode="wait">
+      {text && (
+        <motion.div
+          key={text}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{
+            duration: 0.2,
+            ease: "easeOut",
+          }}
+          className="fixed bottom-10 left-0 right-0 z-[999] mx-auto w-fit cursor-default rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm"
+        >
+          <div className={`flex flex-col items-center`}>
+            {/* Debugging for current video time */}
+            {/* <p className="text-sm text-gray-300">Time: {currentTime.toFixed(2)}s</p> */}
+            <p>"{text}"</p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
