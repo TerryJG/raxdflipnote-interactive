@@ -128,6 +128,9 @@ export const useCaption = (playerRef: React.RefObject<VideoRef>, vttPath: string
 
 export default function CaptionOverlay({ text }: { text?: string }): JSX.Element | null {
   const hasInitiatedGambling = useAtomValue(hasStartedGambling);
+  // Debugging for current video time
+  // const currentTime = useAtomValue(currentVideoTimeAtom);
+
 
   if (!text || !hasInitiatedGambling) return null;
 
@@ -135,8 +138,11 @@ export default function CaptionOverlay({ text }: { text?: string }): JSX.Element
     <div
       className="fixed bottom-10 left-1/2 z-[999] flex -translate-x-1/2 items-center justify-center rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm cursor-default"
     >
-      <div className="flex flex-col items-center">
+      <div className={`flex flex-col items-center `}>
         <p>"{text}"</p>
+
+        {/* Debugging for current video time */}
+        {/* <p className="text-sm text-gray-300">Time: {currentTime.toFixed(2)}s</p> */}
       </div>
     </div>
   );

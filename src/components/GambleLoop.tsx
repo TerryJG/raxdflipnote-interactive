@@ -3,7 +3,7 @@ import { useSetAtom, useAtomValue } from "jotai";
 import { gambleCount } from "@/lib/jotaiState";
 import { useVideoPath } from "@/hooks/useVideoPath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
-import ReactPlayer from "react-player/lazy";
+import ReactPlayer from "react-player/file";
 import ResetCountButton from "@/components/ResetButton";
 
 export default function GambleLoop() {

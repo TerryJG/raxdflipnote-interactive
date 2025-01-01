@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { hasFinishedIntro } from "@/lib/jotaiState";
 import { useVideoPath } from "@/hooks/useVideoPath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
-import ReactPlayer from "react-player/lazy";
+import ReactPlayer from "react-player/file";
 
 export default function GamblecoreIntro() {
   const [hasWatchedIntro, setHasWatchedIntro] = useAtom(hasFinishedIntro);
