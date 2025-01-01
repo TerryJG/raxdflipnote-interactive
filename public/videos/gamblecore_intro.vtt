@@ -1,0 +1,8 @@
+WEBVTT
+
+NOTE
+(This will be ignored) Timecodes are in HH:MM:SS.SS as opposed to HH:MM:SS.SSS. useCaption should have logic to display the current video time
+
+00:00:00.10 --> 00:00:01.99
+Let's go gambling!
+
