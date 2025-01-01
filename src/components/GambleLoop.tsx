@@ -33,9 +33,10 @@ export default function GambleLoop() {
     setIsReady((prev) => ({ ...prev, loaded: true }));
   }, []);
 
-  // Returns a random outcome number between 1 and 4. Used for outcome videos (gamblecore_outcome{number}.mp4)
+  // Returns a random outcome number between 1 and 2. Used for outcome videos (gamblecore_outcome{number}.mp4)
+  // 3 and 4 cuts off prematurely, so they're not included here
   const getRandomOutcome = () => {
-    return Math.floor(Math.random() * 4) + 1;
+    return Math.floor(Math.random() * 2) + 1;
   };
 
   const triggerGamble = () => {
@@ -128,7 +129,7 @@ export default function GambleLoop() {
             playsinline
             onProgress={({ playedSeconds }) => {
               // Optional: Log progress to debug video ending
-              console.log('Video progress:', playedSeconds);
+              console.log("Video progress:", playedSeconds);
             }}
           />
         </div>
@@ -140,7 +141,7 @@ export default function GambleLoop() {
       <div className="mt-14 md:mb-10">
         <button
           ref={buttonRef}
-          className="animate-bounce rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-4 text-4xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 focus:ring-purple-400 focus:ring-offset-2 active:scale-[0.97] active:animate-none"
+          className="animate-bounce rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-4 text-4xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 active:scale-[0.97] active:animate-none"
           onClick={triggerGamble}
         >
           Gamble!
