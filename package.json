@@ -1,7 +1,7 @@
 {
   "name": "raxdflipnote-interactive",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "homepage": "https://terryjg.github.io/raxdflipnote-interactive/",
   "scripts": {
@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "jotai": "^2.11.0",
-    "motion": "^11.15.0",
     "path": "^0.12.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-player": "^2.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

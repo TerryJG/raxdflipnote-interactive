@@ -1,24 +1,41 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSetAtom, useAtomValue } from "jotai";
-import { captionStateAtom, gambleCount } from "@/lib/jotaiState";
+import { gambleCount } from "@/lib/jotaiState";
+import { useVideoPath } from "@/hooks/useVideoPath";
+import { useCaptionPath, useCaption } from "@/hooks/useCaption";
+import ReactPlayer from "react-player/lazy";
 import ResetCountButton from "@/components/ResetButton";
-import useVideoPath from "@/hooks/useVideoPath";
 
 export default function GambleLoop() {
-  const getVideoPath = useVideoPath();
   const [isReady, setIsReady] = useState({ loaded: false, playing: false });
-  const [showOutcome, setIsOutcomeVisible] = useState(false);
-  const [currentOutcome, setCurrentOutcome] = useState(1);
-  const outcomeVideoRef = useRef<HTMLVideoElement>(null);
-  const setCaption = useSetAtom(captionStateAtom);
-  const setGambleCount = useSetAtom(gambleCount);
-  const currentGambleCount = useAtomValue(gambleCount);
+
+  const getVideoPath = useVideoPath();
+  const getCaptionPath = useCaptionPath();
+  const baseVideoRef = useRef<ReactPlayer>(null);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const isSpacebarHeldRef = useRef(false);
   const hasLogged = useRef(false);
 
+  const [showOutcome, setIsOutcomeVisible] = useState(false);
+  const [currentOutcome, setCurrentOutcome] = useState(1);
+  const outcomeVideoRef = useRef<ReactPlayer>(null);
+
+  const currentGambleCount = useAtomValue(gambleCount);
+  const setGambleCount = useSetAtom(gambleCount);
+
+  // Handles video loading
+  useEffect(() => {
+    if (!hasLogged.current) {
+      console.log("> Gambling machine ready.");
+      hasLogged.current = true;
+    }
+    setIsReady((prev) => ({ ...prev, loaded: true }));
+  }, []);
+
+  // Returns a random outcome number between 1 and 4. Used for outcome videos (gamblecore_outcome{number}.mp4)
   const getRandomOutcome = () => {
-    return Math.floor(Math.random() * 4) + 1; // returns 1, 2, 3, or 4
+    return Math.floor(Math.random() * 4) + 1;
   };
 
   const triggerGamble = () => {
@@ -26,66 +43,45 @@ export default function GambleLoop() {
       setCurrentOutcome(getRandomOutcome());
       console.log("> Gambling...");
 
-      setCaption(null); // clears any existing caption
       setIsReady((prev) => ({ ...prev, playing: true }));
-      setIsOutcomeVisible(true);
+      setIsOutcomeVisible(true); // is video visible?
 
       setGambleCount((prev) => prev + 1);
       console.log("> Gamble count:", currentGambleCount + 1);
-      playOutcome();
     }
   };
 
-  // Handles video loading
-  useEffect(() => {
-    const video = outcomeVideoRef.current;
-    if (!video) return;
+  // useCaption hook to handle outcome video captions
+  useCaption(
+    outcomeVideoRef as React.RefObject<{
+      getCurrentTime: () => number;
+      getDuration: () => number;
+    }>,
+    getCaptionPath(`gamblecore_outcome.vtt`),
+  );
 
-    if (!hasLogged.current) {
-      console.log("> Gambling machine ready.");
-      hasLogged.current = true;
-    }
-    
-    setIsReady((prev) => ({ ...prev, loaded: true }));
-  }, []);
-
-  const playOutcome = async () => {
-    const video = outcomeVideoRef.current;
-    if (!video) return;
-
-    try {
-      video.currentTime = 0;
-      await video.play();
-      console.log("> Calculating outcome...");
-
-      setTimeout(() => {
-        setCaption({
-          text: "Aw, dang it...",
-          duration: 0.95, // intentional delay to match video
-          transition: 0,
-          animate: false,
-        });
-      }, 700);
-    } catch (error) {
-      console.error("Error calculating outcome:", error);
-      setIsReady((prev) => ({ ...prev, playing: false }));
+  const handleVideoEnd = () => {
+    // Only end when the video has actually finished
+    if (outcomeVideoRef.current?.getCurrentTime() === outcomeVideoRef.current?.getDuration()) {
+      console.log('"Aw, dang it..."');
       setIsOutcomeVisible(false);
+      setIsReady((prev) => ({ ...prev, playing: false }));
     }
   };
 
-  // Handles spacebar press
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === "Space") {
         event.preventDefault();
 
-        // activates only if spacebar isn't held and the video overlay isn't playing
+        // If the spacebar is not held down and the gamble video is not playing, trigger the gamble
+        // This prevents auto-gambling by holding the spacebar
         if (!isSpacebarHeldRef.current && !isReady.playing) {
           const button = buttonRef.current;
           if (button) {
             button.focus();
             button.classList.add("scale-[0.97]");
-            button.classList.remove("animate-bounce");
+            button.classList.remove("animate-bounce"); // remove animation if the spacebar or button is clicked/tapped/held
           }
           triggerGamble();
         }
@@ -111,42 +107,34 @@ export default function GambleLoop() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [isReady.loaded, isReady.playing, setCaption]);
-
-  const handleVideoEnd = () => {
-    console.log('"Aw, dang it..."');
-    if (outcomeVideoRef.current) {
-      outcomeVideoRef.current.currentTime = 0;
-    }
-    setIsOutcomeVisible(false);
-    setIsReady((prev) => ({ ...prev, playing: false }));
-  };
+  }, [isReady.loaded, isReady.playing, setGambleCount]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       {/* Base loop video */}
-      <div className="relative">
-        <video autoPlay loop muted className="pointer-events-none">
-          <source src={getVideoPath('gamblecore_loop.mp4')} type="video/mp4" />
-          Your browser is too old to gamble.
-        </video>
+      <div className="relative bg-red-300">
+        <ReactPlayer ref={baseVideoRef} url={getVideoPath("gamblecore_loop.mp4")} width="100%" height="auto" playing={true} loop={true} muted={true} playsinline />
 
         {/* Outcome video overlay */}
         <div className={`absolute inset-0 ${showOutcome ? "opacity-100" : "opacity-0"}`}>
-          <video
+          <ReactPlayer
             ref={outcomeVideoRef}
+            url={getVideoPath(`gamblecore_outcome${currentOutcome}.mp4`)}
+            width="100%"
+            height="auto"
+            playing={showOutcome}
             onEnded={handleVideoEnd}
-            preload="auto"
-            className="pointer-events-none"
-            onLoadedData={() => console.log("> Pre-determined outcome already calculated.")}
-          >
-            <source src={getVideoPath(`gamblecore_outcome${currentOutcome}.mp4`)} type="video/mp4" />
-            Your browser is too old to gamble.
-          </video>
+            muted={false}
+            playsinline
+            onProgress={({ playedSeconds }) => {
+              // Optional: Log progress to debug video ending
+              console.log('Video progress:', playedSeconds);
+            }}
+          />
         </div>
 
         {/* Clickable area overlay (for mobile) */}
-        <div className="absolute inset-0 h-full w-full cursor-pointer" onClick={triggerGamble} onTouchStart={triggerGamble}></div>
+        <div className="absolute inset-0 h-full w-full cursor-pointer" onClick={triggerGamble} onTouchStart={triggerGamble} />
       </div>
 
       <div className="mt-14 md:mb-10">

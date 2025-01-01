@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { hasStartedGambling, captionStateAtom } from "@/lib/jotaiState";
-import Caption from "@/components/Caption";
+import CaptionOverlay  from "@/hooks/useCaption";
 import LandingPage from "@/pages/LandingPage";
-import GamblecoreIntro from "@/pages/Gamblecore_Intro";
+import GamblecoreIntro from "@/pages/LoadingScreen";
 
 export default function App() {
   const [hasInitiatedGambling] = useAtom(hasStartedGambling);
@@ -14,7 +14,7 @@ export default function App() {
     if (hasInitiatedGambling) {
       const timer = setTimeout(() => {
         setShowIntro(true);
-      }, 400);
+      }, 400); // Intentional delay to allow the video to load
 
       return () => clearTimeout(timer);
     } else {
@@ -31,7 +31,9 @@ export default function App() {
   return (
     <main className="font-roboto flex h-[100dvh] w-[100dvw] flex-col justify-center gap-2 overflow-hidden md:h-screen md:w-screen">
       {hasInitiatedGambling && showIntro ? <GamblecoreIntro /> : <LandingPage />}
-      {captionState && <Caption text={captionState.text} duration={captionState.duration} />}
+      <CaptionOverlay 
+        text={captionState?.text} 
+      />
     </main>
   );
 }
