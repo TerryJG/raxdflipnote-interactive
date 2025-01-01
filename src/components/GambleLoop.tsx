@@ -113,7 +113,7 @@ export default function GambleLoop() {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       {/* Base loop video */}
-      <div className="relative bg-red-300">
+      <div className="relative">
         <ReactPlayer ref={baseVideoRef} url={getVideoPath("gamblecore_loop.mp4")} width="100%" height="auto" playing={true} loop={true} muted={true} playsinline />
 
         {/* Outcome video overlay */}
