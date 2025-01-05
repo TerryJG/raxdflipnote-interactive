@@ -1,55 +1,42 @@
 import { useState, useEffect } from "react";
 import { useAtomValue } from "jotai";
-import { gambleCount as gambleCountAtom, hasGambledBefore, hasFinishedIntro } from "@/lib/jotaiState";
-import GambleLoop from "@/components/GambleLoop";
-import { AnimatePresence, motion } from "motion/react";
+import { gambleCount as gambleCountAtom, hasGambledBefore, hasFinishedIntro, captionStateAtom } from "@/lib/jotaiState";
+import { motion } from "motion/react";
+import GambleVideoLoop from "@/components/GambleVideoLoop";
+import GambleCounter from "@/components/GambleCounter";
+import GambleButton from "@/components/GambleButton";
+import CaptionOverlay from "@/hooks/useCaption";
 
 export default function Gamblecore() {
   const count = useAtomValue(gambleCountAtom);
   const hasGambled = useAtomValue(hasGambledBefore);
   const hasWatchedIntro = useAtomValue(hasFinishedIntro);
   const [isInitialized, setIsInitialized] = useState(false);
+  const captionState = useAtomValue(captionStateAtom);
 
   useEffect(() => {
     setIsInitialized(true);
   }, []);
 
   return (
-    <motion.div className="relative flex h-screen flex-col items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: hasWatchedIntro ? 1 : 0 }}>
-      <GambleLoop />
+    <div className="relative h-full w-full">
+      <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: hasWatchedIntro ? 1 : 0 }} transition={{ duration: 0.5 }}>
+        {/* Counter */}
+        <motion.div className="absolute left-0 right-0 top-0 z-10 flex h-[60px] items-center justify-center">
+          <GambleCounter className="text-center" isInitialized={isInitialized} hasGambled={hasGambled} count={count} />
+        </motion.div>
 
-      <div className="absolute left-1/2 top-10 flex -translate-x-1/2 items-center justify-center text-center text-xl">
-        {isInitialized && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <AnimatePresence mode="wait">
-              {!hasGambled ? (
-                <motion.div key="tutorial" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-                  <motion.p className="md:hidden">To gamble, tap the gambling machine, or click the shiny button below.</motion.p>
-                  <motion.p className="hidden leading-8 md:block">
-                    To gamble, click the gambling machine, press <span className="rounded-sm bg-zinc-700 p-1 font-bold text-white">&nbsp;[Spacebar]&nbsp;</span> or click the shiny
-                    button below.
-                  </motion.p>
-                </motion.div>
-              ) : (
-                <motion.p
-                  key="count"
-                  className="text-2xl"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.2,
-                    delay: 0.2,
-                    ease: "easeOut",
-                  }}
-                >
-                  Gamble count: <span className="font-bold">{count}</span>
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </div>
-    </motion.div>
+        {/* Video Loop && Caption overlay */}
+        <div className="flex h-full w-full items-center justify-center">
+          <GambleVideoLoop />
+          <CaptionOverlay text={captionState?.text} />
+        </div>
+
+        {/* Button Section */}
+        <motion.div className="absolute bottom-20 left-0 right-0 z-10 flex items-start justify-center">
+          <GambleButton />
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }

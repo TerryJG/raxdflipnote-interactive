@@ -89,40 +89,73 @@ export const useCaption = (playerRef: React.RefObject<VideoRef>, vttPath: string
   useEffect(() => {
     if (!playerRef.current || captions.length === 0) return;
 
+    let previousCaption: string | undefined;
+    let isVideoEnded = false;
+
     const checkTime = () => {
       const currentTime = playerRef.current?.getCurrentTime() || 0;
-      setCurrentTime(currentTime); // Update the global video time from jotai
-
       const duration = playerRef.current?.getDuration() || 0;
+      setCurrentTime(currentTime);
 
-      const activeCaption = captions.find((cap) => {
-        const endTime = Math.min(cap.end, duration);
-        return currentTime >= cap.start && currentTime < endTime;
-      });
-
-      const hasMultipleCaptions = captions.length > 1;
-
-      if (activeCaption) {
-        const isFirstCaption = captions.indexOf(activeCaption) === 0;
-        const isLastCaption = captions.indexOf(activeCaption) === captions.length - 1;
-
-        setCaption({
-          text: activeCaption.text,
-          animate: hasMultipleCaptions ? isFirstCaption || isLastCaption : true,
-          onExit: isLastCaption,
-          onFirst: isFirstCaption,
-        });
+      // Check if video has ended
+      if (Math.abs(currentTime - duration) < 0.1) {
+        if (!isVideoEnded) {
+          isVideoEnded = true;
+          setCaption({
+            text: undefined,
+            animate: false,
+            onExit: false,
+            onFirst: false,
+          });
+          return;
+        }
       } else {
+        isVideoEnded = false;
+      }
+
+      const lastCaption = captions[captions.length - 1];
+      if (currentTime >= duration || (lastCaption && currentTime >= lastCaption.end)) {
         setCaption({
           text: undefined,
           animate: false,
           onExit: false,
           onFirst: false,
         });
+        return;
+      }
+
+      const activeCaption = captions.find((cap) => {
+        const endTime = Math.min(cap.end, duration);
+        return currentTime >= cap.start && currentTime < endTime;
+      });
+
+      // Only update caption state if the text has actually changed
+      if (activeCaption?.text !== previousCaption) {
+        previousCaption = activeCaption?.text;
+        const hasMultipleCaptions = captions.length > 1;
+
+        if (activeCaption) {
+          const isFirstCaption = captions.indexOf(activeCaption) === 0;
+          const isLastCaption = captions.indexOf(activeCaption) === captions.length - 1;
+
+          setCaption({
+            text: activeCaption.text,
+            animate: hasMultipleCaptions ? isFirstCaption || isLastCaption : true,
+            onExit: isLastCaption,
+            onFirst: isFirstCaption,
+          });
+        } else {
+          setCaption({
+            text: undefined,
+            animate: false,
+            onExit: false,
+            onFirst: false,
+          });
+        }
       }
     };
 
-    const interval = setInterval(checkTime, 50);
+    const interval = setInterval(checkTime, 100);
     return () => clearInterval(interval);
   }, [captions, playerRef, setCaption, setCurrentTime]);
 };
@@ -131,28 +164,22 @@ export default function CaptionOverlay({ text }: { text?: string }): JSX.Element
   const hasInitiatedGambling = useAtomValue(hasStartedGambling);
   if (!hasInitiatedGambling) return null;
 
-  // Debugging for current video time
-  // const currentTime = useAtomValue(currentVideoTimeAtom);
-
-
   return (
     <AnimatePresence mode="wait">
       {text && (
         <motion.div
           key={text}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{
-            duration: 0.2,
-            ease: "easeOut",
+            duration: 0,
+            opacity: { duration: 0.05 },
           }}
-          className="fixed bottom-10 left-0 right-0 z-[999] mx-auto w-fit cursor-default rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm"
+          className="absolute bottom-5 left-0 right-0 z-[999] mx-auto w-fit cursor-default rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm"
         >
-          <div className={`flex flex-col items-center`}>
-            {/* Debugging for current video time */}
-            {/* <p className="text-sm text-gray-300">Time: {currentTime.toFixed(2)}s</p> */}
-            <p>"{text}"</p>
+          <div className="flex flex-col items-center">
+            <p>{text}</p>
           </div>
         </motion.div>
       )}

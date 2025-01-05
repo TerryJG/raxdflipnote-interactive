@@ -79,6 +79,10 @@ export default function GamblecoreIntro() {
 
   const handleVideoEnd = () => {
     if (hasWatchedIntro) return;
+    if (playerRef.current) {
+      const duration = playerRef.current.getDuration();
+      setCurrentTime(duration);
+    }
     setHasWatchedIntro(true);
   };
 
@@ -100,6 +104,7 @@ export default function GamblecoreIntro() {
           onEnded={handleVideoEnd}
           onReady={() => setIsVideoReady(true)}
           onProgress={handleProgress}
+          playsinline
         />
       </div>
     </div>

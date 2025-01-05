@@ -7,6 +7,9 @@ export default {
         roboto: ["Roboto", "sans-serif"],
         robotoCondensed: ["Roboto Condensed", "sans-serif"],
       },
+      screens: {
+        xs: "320px",
+      },
       animation: {
         'gradient': 'gradient 3s ease infinite',
       },

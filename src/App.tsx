@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
-import { hasStartedGambling, captionStateAtom } from "@/lib/jotaiState";
-import CaptionOverlay  from "@/hooks/useCaption";
+import { hasStartedGambling } from "@/lib/jotaiState";
 import LandingPage from "@/pages/LandingPage";
-import GamblecoreIntro from "@/pages/LoadingScreen";
+import LoadingScreenIntro from "@/pages/LoadingScreenIntro";
 
 export default function App() {
   const [hasInitiatedGambling] = useAtom(hasStartedGambling);
-  const [captionState] = useAtom(captionStateAtom);
   const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
@@ -30,10 +28,7 @@ export default function App() {
 
   return (
     <main className="font-roboto flex h-[100dvh] w-[100dvw] flex-col justify-center gap-2 overflow-hidden md:h-screen md:w-screen">
-      {hasInitiatedGambling && showIntro ? <GamblecoreIntro /> : <LandingPage />}
-      <CaptionOverlay 
-        text={captionState?.text} 
-      />
+      {hasInitiatedGambling && showIntro ? <LoadingScreenIntro /> : <LandingPage />}
     </main>
   );
 }
