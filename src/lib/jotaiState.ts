@@ -18,6 +18,19 @@ export const hasGambledBefore = atom(
   (get) => get(gambleCount) >= 7
 );
 
+// When the user has triggered the gambling sequence
+export const hasTriggeredGamblingSequence = atom(false);
+export const triggerGambleSequence = ( // Function to handle gambling trigger
+  setGambleCount: (update: (prev: number) => number) => void,
+  currentCount: number,
+  setIsGambling: (value: boolean) => void
+) => {
+  setGambleCount((prev) => prev + 1);
+  console.log("> Gamble count:", currentCount + 1);
+  setIsGambling(true);
+};
+
+
 // Retrieve the current time of the video from ReactPlayer
 export const currentVideoTimeAtom = atom<number>(0);
 
@@ -45,3 +58,4 @@ export const captionStateAtom = atom<CaptionState>({
 
 // You would miss the entire message of this funny side-project if this state is ever used.
 export const hasFinishedGambling = atom(false); // lol
+
