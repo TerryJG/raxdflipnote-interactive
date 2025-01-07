@@ -41,7 +41,7 @@ export function OnlineStatusUI() {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed right-5 top-5 z-[999] max-w-[450px] p-2"
+        className="fixed right-5 top-5 z-0 max-w-[450px] p-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: isOnline ? 0 : 1 }}
         transition={{ duration: 0.01 }}

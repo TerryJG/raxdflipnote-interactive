@@ -5,7 +5,12 @@
 @tailwind utilities;
 
 /* Changes the background color of the entire page when dark reader is enabled */
+html[data-darkreader-mode="dynamic"],
 html[data-darkreader-mode="dynamic"] body,
-html[data-darkreader-scheme="dark"] body {
+html[data-darkreader-scheme="dark"],
+html[data-darkreader-scheme="dark"] body,
+:root[data-darkreader-mode="dynamic"],
+:root[data-darkreader-scheme="dark"] {
   background-color: #000000 !important;
+  color-scheme: dark !important;
 }

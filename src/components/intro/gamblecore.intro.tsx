@@ -1,14 +1,13 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import { hasFinishedIntro, hasReachedFirstGambleCountThreshold, hasDarkReader } from "@/lib/jotaiState";
+import { hasFinishedIntro, hasDarkReader } from "@/lib/jotaiState";
 import { useVideoPath } from "@/hooks/usePath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
 import ReactPlayer from "react-player/file";
 
 export default function GamblecoreIntro() {
   const [hasWatchedIntro, setHasWatchedIntro] = useAtom(hasFinishedIntro);
-  const [, setHasReachedThreshold] = useAtom(hasReachedFirstGambleCountThreshold);
   const hasLoggedCutscene = useRef(false);
   const isDarkMode = useAtomValue(hasDarkReader);
 
@@ -63,7 +62,6 @@ export default function GamblecoreIntro() {
   useEffect(() => {
     if (!hasLoggedCutscene.current && storedCount >= 200) {
       console.log("> Playing unskippable gamblecore cutscene...");
-      setHasReachedThreshold(true);
       
       if (storedCount >= 700) {
         console.log("> Opening latest gamblecore cutscene in a new tab...");
@@ -71,7 +69,7 @@ export default function GamblecoreIntro() {
       }
       hasLoggedCutscene.current = true;
     }
-  }, [storedCount, setHasReachedThreshold]);
+  }, [storedCount]);
 
   useCaption(
     playerRef as React.RefObject<{
