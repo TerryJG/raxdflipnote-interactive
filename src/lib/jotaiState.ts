@@ -30,6 +30,10 @@ export const triggerGambleSequence = ( // Function to handle gambling trigger
   setIsGambling(true);
 };
 
+// When the user has reached a certain gamble count for the first time
+export const hasReachedFirstGambleCountThreshold = atomWithStorage('hasReachedFirstGambleCountThreshold', false);
+export const hasRefreshedAfterThresholdBefore = atomWithStorage('hasRefreshedAfterThreshold', false);
+
 
 // Retrieve the current time of the video from ReactPlayer
 export const currentVideoTimeAtom = atom<number>(0);

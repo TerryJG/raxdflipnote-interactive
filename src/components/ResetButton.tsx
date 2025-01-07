@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { gambleCount } from "@/lib/jotaiState";
+import { gambleCount, hasReachedFirstGambleCountThreshold, hasRefreshedAfterThresholdBefore } from "@/lib/jotaiState";
 
 export default function ResetCountButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [, setGambleCount] = useAtom(gambleCount);
+  const [, setHasReachedFirstThreshold] = useAtom(hasReachedFirstGambleCountThreshold);
+  const [, setHasRefreshedAfterThreshold] = useAtom(hasRefreshedAfterThresholdBefore);
 
   const handleResetCount = () => {
     setGambleCount(0);
+    setHasReachedFirstThreshold(false);
+    setHasRefreshedAfterThreshold(false);
     setIsModalOpen(false);
   };
 

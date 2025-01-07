@@ -25,7 +25,7 @@ export default function MainLayout({
 
         {/* Top Section */}
         {topSection && (
-          <div className="absolute left-0 right-0 top-0 z-10 flex h-[60px] items-center justify-center">
+          <div className="absolute left-0 right-0 top-10 z-10 flex h-[60px] items-center justify-center">
             {topSection}
           </div>
         )}

@@ -12,6 +12,7 @@ export default {
       },
       animation: {
         'gradient': 'gradient 3s ease infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         gradient: {

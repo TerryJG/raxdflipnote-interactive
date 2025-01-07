@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useVideoPath } from "@/hooks/useVideoPath";
+import { useVideoPath } from "@/hooks/usePath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
 import ReactPlayer from "react-player/file";
 import { motion } from "motion/react";

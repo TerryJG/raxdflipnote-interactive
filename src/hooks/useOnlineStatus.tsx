@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { useVideoPath } from "@/hooks/useVideoPath";
+import { useVideoPath } from "@/hooks/usePath";
 
 // Hook to check online status
 export function useOnlineStatusCheck() {
