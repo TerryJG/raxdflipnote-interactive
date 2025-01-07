@@ -1,24 +1,11 @@
-import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import { useEffect } from "react";
+import { useAtomValue } from "jotai";
 import { hasStartedGambling } from "@/lib/jotaiState";
 import LandingPage from "@/pages/LandingPage";
-import LoadingScreenIntro from "@/pages/LoadingScreenIntro";
+import Gamblecore from "@/pages/Gamblecore";
 
-export default function App() {
-  const [hasInitiatedGambling] = useAtom(hasStartedGambling);
-  const [showIntro, setShowIntro] = useState(false);
-
-  useEffect(() => {
-    if (hasInitiatedGambling) {
-      const timer = setTimeout(() => {
-        setShowIntro(true);
-      }, 400); // Intentional delay to allow the video to load
-
-      return () => clearTimeout(timer);
-    } else {
-      setShowIntro(false);
-    }
-  }, [hasInitiatedGambling]);
+function App() {
+  const hasInitiatedGambling = useAtomValue(hasStartedGambling);
 
   useEffect(() => {
     console.log("LET'S GO GAMBLING!!!");
@@ -28,7 +15,9 @@ export default function App() {
 
   return (
     <main className="font-roboto flex h-[100dvh] w-[100dvw] flex-col justify-center gap-2 overflow-hidden md:h-screen md:w-screen">
-      {hasInitiatedGambling && showIntro ? <LoadingScreenIntro /> : <LandingPage />}
+      {hasInitiatedGambling ? <Gamblecore /> : <LandingPage />}
     </main>
   );
 }
+
+export default App;

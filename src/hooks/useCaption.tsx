@@ -174,7 +174,7 @@ export default function CaptionOverlay({ text }: { text?: string }): JSX.Element
           exit={{ opacity: 0 }}
           transition={{
             duration: 0,
-            opacity: { duration: 0.05 },
+            opacity: { duration: 0.02 },
           }}
           className="absolute bottom-5 left-0 right-0 z-[999] mx-auto w-fit cursor-default rounded-md bg-zinc-700/80 px-4 py-2 text-center text-xl text-white backdrop-blur-sm"
         >
