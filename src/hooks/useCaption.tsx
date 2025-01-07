@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { useSetAtom, useAtomValue } from "jotai";
 import { hasStartedGambling, captionStateAtom, currentVideoTimeAtom } from "@/lib/jotaiState";

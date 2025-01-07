@@ -1,6 +1,9 @@
+"use client";
 import { useEffect, useState } from "react"
-import { AnimatePresence, motion } from "motion/react"
 import { useVideoPath } from "@/hooks/usePath";
+import { AnimatePresence, motion } from "motion/react"
+import { useAtomValue } from "jotai"
+import { hasDarkReader } from "@/lib/jotaiState"
 
 // Hook to check online status
 export function useOnlineStatusCheck() {
@@ -33,6 +36,7 @@ export function useOnlineStatusCheck() {
 export function OnlineStatusUI() {
   const isOnline = useOnlineStatusCheck()
   const getVideoPath = useVideoPath()
+  const isDarkMode = useAtomValue(hasDarkReader)
 
   return (
     <AnimatePresence>
@@ -47,7 +51,7 @@ export function OnlineStatusUI() {
           loop
           muted
           playsInline
-          className="h-24 w-24"
+          className={`h-24 w-24 ${isDarkMode ? "invert" : ""}`}
         >
           <source src={getVideoPath("offline_icon.mp4")} type="video/mp4" />
         </video>

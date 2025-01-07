@@ -1,8 +1,9 @@
+"use client";
 import { ReactNode } from "react";
 import { useAtomValue } from "jotai";
 import { captionStateAtom } from "@/lib/jotaiState";
-import CaptionOverlay from "@/hooks/useCaption";
 import { OnlineStatusUI } from "@/hooks/useOnlineStatus";
+import CaptionOverlay from "@/hooks/useCaption";
 
 type MainLayoutProps = {
   topSection?: ReactNode;
@@ -25,7 +26,7 @@ export default function MainLayout({
 
         {/* Top Section */}
         {topSection && (
-          <div className="absolute left-0 right-0 top-10 z-10 flex h-[60px] items-center justify-center">
+          <div className="absolute left-0 right-0 top-20 z-10 flex h-[60px] items-center justify-center">
             {topSection}
           </div>
         )}

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { useAtom } from "jotai";
 import { gambleCount, hasReachedFirstGambleCountThreshold, hasRefreshedAfterThresholdBefore } from "@/lib/jotaiState";

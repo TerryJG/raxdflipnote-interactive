@@ -1,6 +1,7 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
-import { useAtom } from "jotai";
-import { hasFinishedIntro, hasReachedFirstGambleCountThreshold } from "@/lib/jotaiState";
+import { useAtom, useAtomValue } from "jotai";
+import { hasFinishedIntro, hasReachedFirstGambleCountThreshold, hasDarkReader } from "@/lib/jotaiState";
 import { useVideoPath } from "@/hooks/usePath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
 import ReactPlayer from "react-player/file";
@@ -9,6 +10,7 @@ export default function GamblecoreIntro() {
   const [hasWatchedIntro, setHasWatchedIntro] = useAtom(hasFinishedIntro);
   const [, setHasReachedThreshold] = useAtom(hasReachedFirstGambleCountThreshold);
   const hasLoggedCutscene = useRef(false);
+  const isDarkMode = useAtomValue(hasDarkReader);
 
   const getVideoPath = useVideoPath();
   const getCaptionPath = useCaptionPath();
@@ -96,6 +98,7 @@ export default function GamblecoreIntro() {
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="relative">
         <ReactPlayer
+          key={`intro-video-${isDarkMode}`}
           ref={playerRef}
           url={videoPath}
           width="100%"
@@ -107,6 +110,7 @@ export default function GamblecoreIntro() {
           onReady={() => setIsVideoReady(true)}
           onProgress={handleProgress}
           playsinline
+          className={`${isDarkMode ? "invert hue-rotate-180 rounded-md" : ""}`}
         />
       </div>
     </div>

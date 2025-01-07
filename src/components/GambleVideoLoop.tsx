@@ -1,10 +1,11 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
 import { useVideoPath } from "@/hooks/usePath";
 import { useCaptionPath, useCaption } from "@/hooks/useCaption";
 import ReactPlayer from "react-player/file";
-import { motion } from "motion/react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { gambleCount, hasTriggeredGamblingSequence, triggerGambleSequence } from "@/lib/jotaiState";
+import { gambleCount, hasTriggeredGamblingSequence, triggerGambleSequence, hasDarkReader } from "@/lib/jotaiState";
+import { motion } from "motion/react";
 
 export default function GambleVideoLoop() {
   const [isReady, setIsReady] = useState({ loaded: false, playing: false });
@@ -21,6 +22,7 @@ export default function GambleVideoLoop() {
   const setIsGambling = useSetAtom(hasTriggeredGamblingSequence);
   const currentGambleCount = useAtomValue(gambleCount);
   const setGambleCount = useSetAtom(gambleCount);
+  const isDarkMode = useAtomValue(hasDarkReader);
 
   // Handles video loading
   useEffect(() => {
@@ -71,10 +73,21 @@ export default function GambleVideoLoop() {
   return (
     <div className="relative -mt-10 flex h-full w-full items-center justify-center">
       <div className="relative">
-        <ReactPlayer ref={baseVideoRef} url={getVideoPath("gamblecore_loop.mp4")} width="100%" height="auto" playing={true} loop={true} muted={true} playsinline />
+          <ReactPlayer 
+            key={`base-video-${isDarkMode}`} // Key is used to force re-render when dark mode changes
+            className={`${isDarkMode ? "invert hue-rotate-180 rounded-md" : ""}`} 
+            ref={baseVideoRef} 
+            url={getVideoPath("gamblecore_loop.mp4")} 
+            width="100%" 
+            height="auto" 
+            playing={true} 
+            loop={true} 
+            muted={true} 
+            playsinline 
+          />
 
         <motion.div
-          className="absolute inset-0"
+          className={`absolute inset-0`}
           initial={{ opacity: 1 }}
           animate={{
             opacity: showOutcome ? 1 : 0,
@@ -82,6 +95,7 @@ export default function GambleVideoLoop() {
           }}
         >
           <ReactPlayer
+            key={`outcome-video-${isDarkMode}`}
             ref={outcomeVideoRef}
             url={getVideoPath(`gamblecore_outcome${currentOutcome}.mp4`)}
             width="100%"
@@ -90,6 +104,7 @@ export default function GambleVideoLoop() {
             onEnded={handleVideoEnd}
             muted={false}
             playsinline
+            className={`${isDarkMode ? "invert hue-rotate-180 rounded-md" : ""}`}
           />
         </motion.div>
 

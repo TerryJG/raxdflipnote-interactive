@@ -1,6 +1,7 @@
+"use client";
 import { useRef, useEffect } from "react";
 import { useSetAtom, useAtomValue } from "jotai";
-import { gambleCount, hasTriggeredGamblingSequence, triggerGambleSequence } from "@/lib/jotaiState";
+import { gambleCount, hasTriggeredGamblingSequence, triggerGambleSequence, hasDarkReader } from "@/lib/jotaiState";
 import ResetCountButton from "@/components/ResetButton";
 
 export default function GambleButton(): JSX.Element {
@@ -10,6 +11,7 @@ export default function GambleButton(): JSX.Element {
   const isGambling = useAtomValue(hasTriggeredGamblingSequence);
   const setGambleCount = useSetAtom(gambleCount);
   const setIsGambling = useSetAtom(hasTriggeredGamblingSequence);
+  const isDarkMode = useAtomValue(hasDarkReader);
 
   const handleGamble = () => {
     if (!isGambling) {
@@ -60,9 +62,9 @@ export default function GambleButton(): JSX.Element {
       <button
         ref={buttonRef}
         disabled={isGambling}
-        className={`animate-bounce rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-4 text-3xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 active:scale-[0.97] active:animate-none ${
-          isGambling ? "" : ""
-        }`}
+        className={`animate-bounce rounded-md px-4 py-4 text-3xl font-bold text-white transition-all duration-500 hover:drop-shadow-md focus:outline-none focus:ring-0 active:scale-[0.97] active:animate-none ${
+          isDarkMode ? "bg-blue-500" : "bg-gradient-to-r from-blue-500 to-purple-500"
+        } ${isGambling ? "" : ""}`}
         onClick={handleGamble}
       >
         Gamble!

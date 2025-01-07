@@ -3,3 +3,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Changes the background color of the entire page when dark reader is enabled */
+html[data-darkreader-mode="dynamic"] body,
+html[data-darkreader-scheme="dark"] body {
+  background-color: #000000 !important;
+}
